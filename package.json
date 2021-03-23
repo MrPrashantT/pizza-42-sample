@@ -13,8 +13,7 @@
     "api-server": "node api-server.js",
     "api-server:dev": "nodemon api-server.js",
     "dev": "npm-run-all --parallel spa api-server:dev",
-    "prod": "npm-run-all --parallel server api-server",
-    "heroku-postbuild": "webpack -p"
+    "prod": "npm-run-all --parallel server api-server"
   },
   "dependencies": {
     "@auth0/auth0-react": "^1.2.0",
