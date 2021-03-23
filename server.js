@@ -11,4 +11,8 @@ app.use(morgan("dev"));
 app.use(helmet());
 app.use(express.static(join(__dirname, "build")));
 
+app.get('*', function (req, res) {
+    res.sendFile(join(__dirname, 'build', 'index.html'));
+  });
+
 app.listen(port, () => console.log(`Server listening on port ${port}`));
