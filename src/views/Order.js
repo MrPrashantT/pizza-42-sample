@@ -7,7 +7,7 @@ import Loading from "../components/Loading";
 import pizzaData from "../utils/pizzaData";
 
 export const ExternalApiComponent = () => {
-  const { apiOrigin, audience } = getConfig();
+  const { apiOrigin } = getConfig();
 
 
   console.log('API ORIGIN:', apiOrigin);
@@ -97,9 +97,47 @@ export const ExternalApiComponent = () => {
     fn();
   };
 
+  const _buildPreviouslyOrderedItems = () => {
+
+    let pizzaItems = [];
+
+    user['https://pizza42.com/orderHistory'].forEach(element => {
+      
+      let pizza = pizzaData.find(pizza => pizza.name === element);
+      if(pizzaItems.indexOf(pizza) > -1){
+        return;
+      }
+      pizzaItems.push(pizza);
+      
+    });
+
+    return pizzaItems.map(pizza => (
+      <Col sm="4" key={pizza.id} className="mb-3">
+      <Card>
+        <CardImg top height="300px" src={pizza.img} alt="Card image cap" />
+        <CardBody>
+          <h4>{pizza.name}</h4>
+          <p>{pizza.description}</p>
+          <p>${pizza.price}</p>
+          <Button
+            color="primary"
+            className="mt-5"
+            onClick={() => callApi(pizza.name)}
+            disabled={!user.email_verified}
+          >
+            Order {pizza.name} pizza again!
+          </Button>
+        </CardBody>
+      </Card>
+    </Col>
+    ));
+    
+
+  }
+
   const _buildPizzaItems = () => {
     return pizzaData.map(pizza => (
-      <Col sm="4" key={pizza.id} className="mb-10">
+      <Col sm="4" key={pizza.id} className="mb-3">
         <Card>
           <CardImg top height="300px" src={pizza.img} alt="Card image cap" />
           <CardBody>
@@ -161,29 +199,24 @@ export const ExternalApiComponent = () => {
         </Alert>
       )}
 
-      <Row>
-        {/* {_buildPizzaItems()} */}
 
-        {pizzaData.map(pizza => (
-      <Col sm="4" key={pizza.id} className="mb-10">
-        <Card>
-          <CardImg top height="300px" src={pizza.img} alt="Card image cap" />
-          <CardBody>
-            <h4>{pizza.name}</h4>
-            <p>{pizza.description}</p>
-            <p>${pizza.price}</p>
-            <Button
-              color="primary"
-              className="mt-5"
-              onClick={() => {callApi(pizza.name)}}
-              disabled={!user.email_verified}
-            >
-              Order {pizza.name} pizza!
-            </Button>
-          </CardBody>
-        </Card>
-      </Col>
-    ))}
+        {user['https://pizza42.com/orderHistory'] && user['https://pizza42.com/orderHistory'].length > 0 &&
+        
+          <Row>
+            <Col sm="12">
+              <h3>Your previous orders</h3>
+            </Col>
+
+            {_buildPreviouslyOrderedItems()}
+          </Row>
+        }
+     
+
+      <Row>
+        <Col sm="12">
+          <h3>Our entire range</h3>
+        </Col>
+        {_buildPizzaItems()}
       </Row>
 
 

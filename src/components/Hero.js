@@ -9,7 +9,7 @@ const Hero = () => (
     <h1 className="mb-4">Welcome to Pizza 42!</h1>
 
     <p className="lead">
-      💯 the best pizza on the planet.
+      <span role="img">💯</span> the best pizza on the planet.
     </p>
   </div>
 );
