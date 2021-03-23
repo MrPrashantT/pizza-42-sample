@@ -8,6 +8,7 @@ const jwtAuthz = require('express-jwt-authz');
 const authConfig = require("./src/auth_config.json");
 var ManagementClient = require('auth0').ManagementClient;
 const bodyParser = require('body-parser');
+require('dotenv').config()
 
 
 const app = express();
@@ -35,8 +36,8 @@ app.use(express.json());
 
 var auth0Client = new ManagementClient({
   domain: authConfig.domain,
-  clientId: authConfig.m2mClientId,
-  clientSecret: authConfig.m2mClientSecret,
+  clientId: process.env.m2mClientId,
+  clientSecret: process.env.m2mClientSecret,
   scope: 'update:users_app_metadata'
 });
 
