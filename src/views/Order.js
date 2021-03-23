@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Button, Alert } from "reactstrap";
+import { Button, Alert, Card, Row, Col, CardImg, CardBody } from "reactstrap";
 import Highlight from "../components/Highlight";
 import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 import { getConfig } from "../config";
 import Loading from "../components/Loading";
+import pizzaData from "../utils/pizzaData";
 
 export const ExternalApiComponent = () => {
   const { apiOrigin = "http://localhost:3001", audience } = getConfig();
@@ -18,6 +19,7 @@ export const ExternalApiComponent = () => {
     getAccessTokenSilently,
     loginWithPopup,
     getAccessTokenWithPopup,
+    user
   } = useAuth0();
 
   const handleConsent = async () => {
@@ -54,14 +56,19 @@ export const ExternalApiComponent = () => {
     await callApi();
   };
 
-  const callApi = async () => {
+  const callApi = async (pizzaName) => {
     try {
       const token = await getAccessTokenSilently();
 
-      const response = await fetch(`${apiOrigin}/api/external`, {
+      const response = await fetch(`${apiOrigin}/api/order`, {
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
         },
+        body: JSON.stringify({
+          pizzaType: pizzaName
+        })
       });
 
       const responseData = await response.json();
@@ -72,9 +79,12 @@ export const ExternalApiComponent = () => {
         apiMessage: responseData,
       });
     } catch (error) {
+
+      console.log('error:', error);
       setState({
         ...state,
-        error: error.error,
+        showResult: true,
+        error: error,
       });
     }
   };
@@ -83,6 +93,30 @@ export const ExternalApiComponent = () => {
     e.preventDefault();
     fn();
   };
+
+  const _buildPizzaItems = () => {
+    return pizzaData.map(pizza => (
+      <Col sm="4" key={pizza.id} className="mb-10">
+        <Card>
+          <CardImg top height="300px" src={pizza.img} alt="Card image cap" />
+          <CardBody>
+            <h4>{pizza.name}</h4>
+            <p>{pizza.description}</p>
+            <p>${pizza.price}</p>
+            <Button
+              color="primary"
+              className="mt-5"
+              onClick={() => callApi(pizza.name)}
+              disabled={!user.email_verified}
+            >
+              Order {pizza.name} pizza!
+            </Button>
+          </CardBody>
+        </Card>
+      </Col>
+    ));
+  }
+  
 
   return (
     <>
@@ -113,72 +147,47 @@ export const ExternalApiComponent = () => {
           </Alert>
         )}
 
-        <h1>Order Pizza</h1>
-        <p className="lead">
-          Order a pizza by clicking the button below
-        </p>
+      <h1>Order Pizza</h1>
 
-        {/* <p>
-          This will call a local API on port 3001 that would have been started
-          if you run <code>npm run dev</code>. An access token is sent as part
-          of the request's `Authorization` header and the API will validate it
-          using the API's audience value.
-        </p> */}
+      {!user.email_verified && (
+        <Alert color="warning">
+          <p>
+            You can't order pizza yet because your email address is not verified. Please click on the link in the verification email that was sent to your email address.
+          </p>
 
-        {!audience && (
-          <Alert color="warning">
-            <p>
-              You can't call the API at the moment because your application does
-              not have any configuration for <code>audience</code>, or it is
-              using the default value of <code>YOUR_API_IDENTIFIER</code>. You
-              might get this default value if you used the "Download Sample"
-              feature of{" "}
-              <a href="https://auth0.com/docs/quickstart/spa/react">
-                the quickstart guide
-              </a>
-              , but have not set an API up in your Auth0 Tenant. You can find
-              out more information on{" "}
-              <a href="https://auth0.com/docs/api">setting up APIs</a> in the
-              Auth0 Docs.
-            </p>
-            <p>
-              The audience is the identifier of the API that you want to call
-              (see{" "}
-              <a href="https://auth0.com/docs/get-started/dashboard/tenant-settings#api-authorization-settings">
-                API Authorization Settings
-              </a>{" "}
-              for more info).
-            </p>
+        </Alert>
+      )}
 
-            <p>
-              In this sample, you can configure the audience in a couple of
-              ways:
-            </p>
-            <ul>
-              <li>
-                in the <code>src/index.js</code> file
-              </li>
-              <li>
-                by specifying it in the <code>auth_config.json</code> file (see
-                the <code>auth_config.json.example</code> file for an example of
-                where it should go)
-              </li>
-            </ul>
-            <p>
-              Once you have configured the value for <code>audience</code>,
-              please restart the app and try to use the "Ping API" button below.
-            </p>
-          </Alert>
-        )}
+      <Row>
+        {/* {_buildPizzaItems()} */}
 
-        <Button
-          color="primary"
-          className="mt-5"
-          onClick={callApi}
-          disabled={!audience}
-        >
-          Order!
-        </Button>
+        {pizzaData.map(pizza => (
+      <Col sm="4" key={pizza.id} className="mb-10">
+        <Card>
+          <CardImg top height="300px" src={pizza.img} alt="Card image cap" />
+          <CardBody>
+            <h4>{pizza.name}</h4>
+            <p>{pizza.description}</p>
+            <p>${pizza.price}</p>
+            <Button
+              color="primary"
+              className="mt-5"
+              onClick={() => {callApi(pizza.name)}}
+              disabled={!user.email_verified}
+            >
+              Order {pizza.name} pizza!
+            </Button>
+          </CardBody>
+        </Card>
+      </Col>
+    ))}
+      </Row>
+
+
+
+
+
+
       </div>
 
       <div className="result-block-container">

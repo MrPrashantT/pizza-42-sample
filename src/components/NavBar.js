@@ -57,7 +57,7 @@ const NavBar = () => {
                 <NavItem>
                   <NavLink
                     tag={RouterNavLink}
-                    to="/external-api"
+                    to="/order"
                     exact
                     activeClassName="router-link-exact-active"
                   >
@@ -73,7 +73,9 @@ const NavBar = () => {
                     id="qsLoginBtn"
                     color="primary"
                     className="btn-margin"
-                    onClick={() => loginWithRedirect()}
+                    onClick={() => loginWithRedirect({
+                      scope: "create:order"
+                    })}
                   >
                     Log in
                   </Button>
