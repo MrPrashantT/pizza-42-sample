@@ -2,5 +2,6 @@
   "domain": "pt-pizza-42.au.auth0.com",
   "clientId": "IbWJF9Ia9wqNmFI9aMPa9tnvcwbyOsiJ",
   "audience": "https://api.pizza42.com",
-  "scope": "create:order"
+  "scope": "create:order",
+  "apiOrigin": "https://pt-pizza-42-api.herokuapp.com"
 }

@@ -7,7 +7,10 @@ import Loading from "../components/Loading";
 import pizzaData from "../utils/pizzaData";
 
 export const ExternalApiComponent = () => {
-  const { apiOrigin = "http://localhost:3001", audience } = getConfig();
+  const { apiOrigin, audience } = getConfig();
+
+
+  console.log('API ORIGIN:', apiOrigin);
 
   const [state, setState] = useState({
     showResult: false,
