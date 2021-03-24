@@ -4,9 +4,14 @@ This sample React SPA (Single-page app) is to demonstrate Auth0 implementation a
 
 ## Setup 
 1. Clone this repository
-2. Rename the `auth_config.sample.json` file to `auth_config.json` and replace all placeholder values with the appropriate values from your Auth0 tenant. `domain`, `clientId` , `audience` and `scope`.
-3. `npm install  `
-4. `npm start`
+2. [Register a Single Page App](https://auth0.com/docs/applications/set-up-an-application/register-single-page-app) in Auth0
+3. Rename the `auth_config.sample.json` file to `auth_config.json` and replace all placeholder values with the appropriate values from your Auth0 tenant.
+	- `domain`: Your Auth0 tenant domain
+	- `clientId`: `client_id` from step (2)
+	- `audience`: API audience from configuring the [Pizza 42 API](https://github.com/MrPrashantT/pizza-42-api).
+	-  `scope`: Permission from configuring the [Pizza 42 API](https://github.com/MrPrashantT/pizza-42-api).
+5. `npm install  `
+6. `npm start`
 
 ## Functionality
 
